@@ -9,6 +9,7 @@ app.use(cors({ origin: "*" }));
 dotenv.config({path : ".env"})
 
 dotenv.config({ path: ".env.local" }); // This should be at the very top
+app.use(express.json())
 
 
 const writer = new OpenAI({
@@ -600,12 +601,13 @@ const outletsData = [
     throw new Error("Failed to determine the best outlets after multiple attempts.");
   };
   
-   app.post("/get-outlets" ,async (req, res) => {
+   app.post("/get-outlets" , async (req, res) => {
     const { content } = req.body;
-  
-    if (!content.trim()) {
-      return res.status(400).json({ message: "content is required" });
+
+    if (!content || typeof content !== "string" || !content.trim()) {
+      return res.status(400).json({ message: "Content is required and must be a non-empty string" });
     }
+  
   
     try {
 
