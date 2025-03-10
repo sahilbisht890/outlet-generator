@@ -548,6 +548,7 @@ const outletsData = [
     },
   ]
   
+
   export const determineBestOutlets = async (articleContent) => {
     const outlets = outletsData;
   
@@ -584,9 +585,9 @@ const outletsData = [
         }
   
         const generatedContent = response.choices[0].message.content.trim();
-        const bestOutlets = generatedContent.split(",").map((outlet) => outlet.trim());
+        const bestOutletNames = generatedContent.split(",").map((outlet) => outlet.trim());
   
-        const validOutlets = bestOutlets.filter((outlet) => outlets.some(o => o.Outlets_Name === outlet));
+        const validOutlets = outlets.filter((outlet) => bestOutletNames.includes(outlet.Outlets_Name));
         if (validOutlets.length === 3) {
           return validOutlets;
         }
@@ -600,7 +601,6 @@ const outletsData = [
   
     throw new Error("Failed to determine the best outlets after multiple attempts.");
   };
-  
    app.post("/get-outlets" , async (req, res) => {
     const { content } = req.body;
 
